@@ -1,0 +1,20 @@
+﻿  MyProject.cpp
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(266): warning C4099: 'Model': type name first seen using 'struct' now seen using 'class'
+  c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(180): note: see declaration of 'Model'
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(267): warning C4099: 'Texture': type name first seen using 'struct' now seen using 'class'
+  c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(197): note: see declaration of 'Texture'
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(268): warning C4099: 'Pipeline': type name first seen using 'struct' now seen using 'class'
+  c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(228): note: see declaration of 'Pipeline'
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(269): warning C4099: 'DescriptorSetLayout': type name first seen using 'struct' now seen using 'class'
+  c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(220): note: see declaration of 'DescriptorSetLayout'
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(270): warning C4099: 'DescriptorSet': type name first seen using 'struct' now seen using 'class'
+  c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(249): note: see declaration of 'DescriptorSet'
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(1309): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(1506): warning C4267: 'argument': conversion from 'size_t' to '_Ty', possible loss of data
+          with
+          [
+              _Ty=unsigned int
+          ]
+c:\users\fukum\source\repos\air hockey\air hockey\myproject.hpp(1800): warning C4267: '=': conversion from 'size_t' to 'uint32_t', possible loss of data
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  Air Hockey.vcxproj -> C:\Users\fukum\source\repos\Air Hockey\x64\Debug\Air Hockey.exe
