@@ -31,9 +31,10 @@ protected:
 	Texture T_table;
 	DescriptorSet DS_table;
 
-	Model M_handle1;
+	Model M_handle;
 	Texture T_handle;
 	DescriptorSet DS_handle1;
+	DescriptorSet DS_handle2;
 
 	DescriptorSet DS_global;
 
@@ -46,9 +47,9 @@ protected:
 		initialBackgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		// Descriptor pool sizes
-		uniformBlocksInPool = 3;
-		texturesInPool = 2;
-		setsInPool = 3;
+		uniformBlocksInPool = 4;
+		texturesInPool = 3;
+		setsInPool = 4;
 	}
 
 	// Here you load and setup all your Vulkan objects
@@ -91,13 +92,18 @@ protected:
 						{1, TEXTURE, 0, &T_table}
 			});
 
-		M_handle1.init(this, "models/handler.obj");
+		M_handle.init(this, "models/handler.obj");
 		T_handle.init(this, "textures/airhockey-background.png");
 
 		DS_handle1.init(this, &DSLobj, {
 						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
 						{1, TEXTURE, 0, &T_handle}
 			});
+		DS_handle2.init(this, &DSLobj, {
+						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+						{1, TEXTURE, 0, &T_handle}
+			});
+
 		DS_global.init(this, &DSLglobal, {
 				{0, UNIFORM, sizeof(globalUniformBufferObject), nullptr}
 			});
@@ -111,8 +117,10 @@ protected:
 
 
 		DS_handle1.cleanup();
+		DS_handle2.cleanup();
+
 		T_handle.cleanup();
-		M_handle1.cleanup();
+		M_handle.cleanup();
 
 		P1.cleanup();
 		DSLglobal.cleanup();
@@ -124,7 +132,7 @@ protected:
 	// with their buffers and textures
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
 
-		//Model 1
+		//Table ----------------------------------------------------------
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 			P1.graphicsPipeline);
 		vkCmdBindDescriptorSets(commandBuffer,
@@ -153,16 +161,22 @@ protected:
 		vkCmdDrawIndexed(commandBuffer,
 			static_cast<uint32_t>(M_table.indices.size()), 1, 0, 0, 0);
 
-		//Model 2 rendering -----------------------------------------------------------------------------------
+		//Handle 1 and 2 -----------------------------------------------------------------------------------
 
 
-		VkBuffer vertexBuffers2[] = { M_handle1.vertexBuffer };
+		VkBuffer vertexBuffers2[] = { M_handle.vertexBuffer };
 		VkDeviceSize offsets2[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers2, offsets2);
-		vkCmdBindIndexBuffer(commandBuffer, M_handle1.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindIndexBuffer(commandBuffer, M_handle.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_handle1.descriptorSets[currentImage], 0, NULL);
 
-		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_handle1.indices.size()), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_handle.indices.size()), 1, 0, 0, 0);
+
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_handle2.descriptorSets[currentImage], 0, NULL);
+
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_handle.indices.size()), 1, 0, 0, 0);
+
+
 
 
 	}
@@ -171,9 +185,18 @@ protected:
 	// Very likely this will be where you will be writing the logic of your application.
 	void updateUniformBuffer(uint32_t currentImage) {
 		static auto startTime = std::chrono::high_resolution_clock::now();
+		static float lastTime = 0.0f;
+		static glm::mat3 CamDir = glm::mat3(1.0f);
+		static glm::vec3 player1Pos = glm::vec3(0, 0, 0);
+		static glm::vec3 player2Pos = glm::vec3(-1.5f, 0, 0);
+
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>
 			(currentTime - startTime).count();
+		float deltaT = time - lastTime;
+		lastTime = time;
+
+		const float MOVE_SPEED = 0.75f;
 
 		globalUniformBufferObject gubo{};
 		UniformBufferObject ubo{};
@@ -204,8 +227,23 @@ protected:
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_table.uniformBuffersMemory[0][currentImage]);
 
-		// For the Handle 1
-		ubo.model = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 0.0f, 0.0f)) *
+		// For the Handle of player1
+
+		if (glfwGetKey(window, GLFW_KEY_A)) {
+			player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D)) {
+			player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_S)) {
+			player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+		}
+		if (glfwGetKey(window, GLFW_KEY_W)) {
+			player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+		}
+
+		ubo.model = glm::translate(glm::mat4(1.0), player1Pos)	*
 			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f))*
 			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *
 			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -213,6 +251,26 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_handle1.uniformBuffersMemory[0][currentImage]);
+
+		// For the Handle of player 2
+		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+			player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+			player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP)) {
+			player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+		}
+		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+			player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+		}
+		ubo.model = glm::translate(glm::mat4(1.0), player2Pos);
+		vkMapMemory(device, DS_handle2.uniformBuffersMemory[0][currentImage], 0,
+			sizeof(ubo), 0, &data);
+		memcpy(data, &ubo, sizeof(ubo));
+		vkUnmapMemory(device, DS_handle2.uniformBuffersMemory[0][currentImage]);
 
 	}
 };
