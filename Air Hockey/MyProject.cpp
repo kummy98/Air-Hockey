@@ -202,10 +202,38 @@ protected:
 		UniformBufferObject ubo{};
 
 		void* data;
+		static int viewMode=0;
+		static float debounce = time;
 
-		gubo.view = glm::lookAt(glm::vec3(0.0f, 1.8f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 1.0f));
+		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+			if (time - debounce > 0.33) {
+				viewMode = (viewMode + 1)%3;
+				debounce = time;
+				std::cout << "viewMode: " << viewMode << "\n";
+			}
+		}
+
+		switch (viewMode) {
+		case 0:
+			gubo.view = glm::lookAt(glm::vec3(0.0f, 1.8f, 0.0f),
+						glm::vec3(0.0f, 0.0f, 0.0f),
+						glm::vec3(0.0f, 0.0f, 1.0f));
+			break;
+		case 1:
+			gubo.view = glm::lookAt(glm::vec3(1.8f, 0.0f, 1.0f),
+						glm::vec3(0.5f, 0.0f, 0.0f),
+						glm::vec3(0.0f, 0.0f, 1.0f))*
+				glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			break;
+		case 2:
+			gubo.view = glm::lookAt(glm::vec3(-1.8f, 0.0f, 1.0f),
+				glm::vec3(-0.5f, 0.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 1.0f))*
+				glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			break;
+		}
+
+
 		gubo.proj = glm::perspective(glm::radians(45.0f),
 			swapChainExtent.width / (float)swapChainExtent.height,
 			0.1f, 10.0f);
