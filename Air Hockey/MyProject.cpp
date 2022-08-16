@@ -71,14 +71,22 @@ protected:
 		return pix > 128;
 	}
 
-	bool canStep(float x, float y) {
+	bool canStep(float x, float y, int playerNumber) {
 		for (int i = 0; i < checkSteps; i++) {
 			if (!canStepPoint(x + cos(6.2832 * i / (float)checkSteps) * checkRadius,
-							  y + sin(6.2832 * i / (float)checkSteps) * checkRadius)) {
+							  y + sin(6.2832 * i / (float)checkSteps) * checkRadius) || invadeEnemyTeam(x, playerNumber)) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	bool invadeEnemyTeam(float playerPos, int playerNumber) {
+		if (playerPos - radiusPaddle < 0 && playerNumber==1)
+			return true;
+		else if (playerPos + radiusPaddle > 0 && playerNumber == 2)
+			return true;
+		return false;
 	}
 
 
@@ -414,8 +422,11 @@ protected:
 			break;
 		}
 
+		std::cout << "player1 x: " << player1Pos.x+radiusPaddle << "\n";
 
-		if (!canStep(player1Pos.x, player1Pos.z)) {
+		if (!canStep(player1Pos.x, player1Pos.z, 1)) {
+			std::cout << "can step: " << !canStep(player1Pos.x, player1Pos.z,1 ) << "\n";
+
 			player1Pos = oldPlayer1Pos;
 		}
 
@@ -486,7 +497,7 @@ protected:
 
 
 
-		if (!canStep(player2Pos.x, player2Pos.z)) {
+		if (!canStep(player2Pos.x, player2Pos.z,2)) {
 			player2Pos = oldPlayer2Pos;
 		}
 
