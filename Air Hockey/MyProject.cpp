@@ -120,14 +120,14 @@ protected:
         
         //Scores
         M_score1.init(this, "models/Score1.obj");
-        T_score1.init(this, "textures/Score1.png");
+        T_score1.init(this, "textures/Score0.png");
         DS_score1.init(this, &DSLobj, {
                         {0, UNIFORM, sizeof(UniformBufferObject), nullptr},
                         {1, TEXTURE, 0, &T_score1}
             });
         
         M_score2.init(this, "models/Score2.obj");
-        T_score2.init(this, "textures/Score2.png");
+        T_score2.init(this, "textures/Score0.png");
         DS_score2.init(this, &DSLobj, {
                         {0, UNIFORM, sizeof(UniformBufferObject), nullptr},
                         {1, TEXTURE, 0, &T_score2}
