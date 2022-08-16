@@ -362,19 +362,58 @@ protected:
 		// Paddle of player1
 		glm::vec3 oldPlayer1Pos = player1Pos;
 
-		if (glfwGetKey(window, GLFW_KEY_A)) {
-			player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+		switch (viewMode) {
+		case 0:
+			if (glfwGetKey(window, GLFW_KEY_A)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_D)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_S)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_W)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			break;
+		case 1:
+			if (glfwGetKey(window, GLFW_KEY_A)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_D)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_S)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_W)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			break;
+		case 2:
+			if (glfwGetKey(window, GLFW_KEY_A)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+
+			}
+			if (glfwGetKey(window, GLFW_KEY_D)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_S)) {
+				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+
+			}
+			if (glfwGetKey(window, GLFW_KEY_W)) {
+				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+
+			}
+			break;
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_S)) {
-			player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
-		}
-		if (glfwGetKey(window, GLFW_KEY_W)) {
-			player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
-		}
 
 		if (!canStep(player1Pos.x, player1Pos.z)) {
 			player1Pos = oldPlayer1Pos;
@@ -392,20 +431,60 @@ protected:
 		// Paddle of player 2
 		glm::vec3 oldPlayer2Pos = player2Pos;
 
+		switch (viewMode) {
+		case 0:
+			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
 
-		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-			player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
-		}
-		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-			player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_UP)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+
+			}
+			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+
+			}
+			break;
+		case 1:
+			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_UP)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			break;
+		case 2:
+			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_UP)) {
+				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+			}
+			break;
+
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_UP)) {
-			player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
-		}
-		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-			player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
-		}
+
 
 		if (!canStep(player2Pos.x, player2Pos.z)) {
 			player2Pos = oldPlayer2Pos;
