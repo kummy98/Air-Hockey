@@ -57,17 +57,32 @@ protected:
 
 	DescriptorSet DS_global;
 
-	//Collision map
+	//Collision maps
+
+	//For the 2 paddles
 	int collisionMapWidth, collisionMapHeight;
 	stbi_uc* collisionMap;
 
+	//For the disk
+	int diskCollisionMapWidth, diskCollisionMapHeight;
+	stbi_uc* diskCollisionMap;
+
 	const float checkRadius = radiusPaddle;
+	const float checkRadiusDisk = radiusDisk;
 	const int checkSteps = 200;
 
 	bool canStepPoint(float x, float y) {
 		int pixX = round((x + 1.893 / 2) * (collisionMapWidth / 1.893));
 		int pixY = round((y + 1.014 / 2) * (collisionMapHeight / 1.014));
 		int pix = (int)collisionMap[collisionMapWidth * pixY + pixX];
+		//std::cout << pixX << " " << pixY << " " << x << " " << y << " \t P = " << pix << "\n";		
+		return pix > 128;
+	}
+
+	bool canDiskStepPoint(float x, float y) {
+		int pixX = round((x + 1.893 / 2) * (diskCollisionMapWidth / 1.893));
+		int pixY = round((y + 1.014 / 2) * (diskCollisionMapHeight / 1.014));
+		int pix = (int)diskCollisionMap[diskCollisionMapWidth * pixY + pixX];
 		//std::cout << pixX << " " << pixY << " " << x << " " << y << " \t P = " << pix << "\n";		
 		return pix > 128;
 	}
@@ -84,8 +99,8 @@ protected:
 
 	bool diskCanStep(float x, float y) {
 		for (int i = 0; i < checkSteps; i++) {
-			if (!canStepPoint(x + cos(6.2832 * i / (float)checkSteps) * checkRadius,
-				y + sin(6.2832 * i / (float)checkSteps) * checkRadius)) {
+			if (!canDiskStepPoint(x + cos(6.2832 * i / (float)checkSteps) * checkRadiusDisk,
+				y + sin(6.2832 * i / (float)checkSteps) * checkRadiusDisk)) {
 				return false;
 			}
 		}
@@ -188,6 +203,15 @@ protected:
 		if (collisionMap) {
 
 			std::cout << "Table collision map width: " << collisionMapWidth << ", table height: " << collisionMapHeight<< "\n";
+		}
+		else {
+			std::cout << "failed to load map image!";
+		}
+
+		diskCollisionMap = stbi_load("textures/disk_collision_map.png", &diskCollisionMapWidth, &diskCollisionMapHeight, NULL, 1);
+		if (diskCollisionMap) {
+
+			std::cout << "Table collision map width: " << diskCollisionMapWidth << ", table height: " << diskCollisionMapHeight << "\n";
 		}
 		else {
 			std::cout << "failed to load map image!";
