@@ -53,6 +53,7 @@ protected:
 	Model M_disk;
 	Texture T_disk;
 	DescriptorSet DS_disk;
+    float radiusDisk = 0.03f;
 
 	DescriptorSet DS_global;
 
@@ -80,6 +81,10 @@ protected:
 		}
 		return true;
 	}
+    
+    bool detectDiskCollision(float paddleX, float paddleZ, float diskX, float diskZ) {
+        return (sqrt(pow((paddleX - diskX),2) + pow((paddleZ - diskZ),2)) < (radiusPaddle + radiusDisk));
+    }
 
 	bool invadeEnemyTeam(float playerPos, int playerNumber) {
 		if (playerPos - radiusPaddle < 0 && playerNumber==1)
@@ -293,6 +298,9 @@ protected:
 		static glm::mat3 CamDir = glm::mat3(1.0f);
 		static glm::vec3 player1Pos = glm::vec3(0.57f, 0, 0);
 		static glm::vec3 player2Pos = glm::vec3(-0.57f, 0, 0);
+        static glm::vec3 diskPos = glm::vec3(0.0f);
+        static glm::vec3 diskDirection;
+        static float diskVelocity;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>
@@ -301,6 +309,8 @@ protected:
 		lastTime = time;
 
 		const float MOVE_SPEED = 0.75f;
+        const float DISK_SPEED_INCREASE = 1.8f;
+        const float DISK_DECELERATION = 0.3f;
 
 		globalUniformBufferObject gubo{};
 		UniformBufferObject ubo{};
@@ -422,11 +432,10 @@ protected:
 			break;
 		}
 
-		std::cout << "player1 x: " << player1Pos.x+radiusPaddle << "\n";
+		//std::cout << "player1 x: " << player1Pos.x+radiusPaddle << "\n";
 
 		if (!canStep(player1Pos.x, player1Pos.z, 1)) {
-			std::cout << "can step: " << !canStep(player1Pos.x, player1Pos.z,1 ) << "\n";
-
+			//std::cout << "can step: " << !canStep(player1Pos.x, player1Pos.z,1 ) << "\n";
 			player1Pos = oldPlayer1Pos;
 		}
 
@@ -495,8 +504,6 @@ protected:
 
 		}
 
-
-
 		if (!canStep(player2Pos.x, player2Pos.z,2)) {
 			player2Pos = oldPlayer2Pos;
 		}
@@ -506,15 +513,40 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_paddle2.uniformBuffersMemory[0][currentImage]);
+        
+        //Collisions
+        
+        if(detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) {
+            //std::cout << "Disk collision player1" << "\n";
+            
+            float distance = (sqrt(pow((diskPos.x - player1Pos.x),2) + pow((diskPos.z - player1Pos.z),2)));
+            if(distance == 0) return;
+            
+            diskDirection = glm::normalize(diskPos - player1Pos);
+            diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer1Pos.x - player1Pos.x),2) + pow((oldPlayer1Pos.z - player1Pos.z),2)))/ deltaT);
+        };
+        
+        if(detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) {
+            //std::cout << "Disk collision player2" << "\n";
+            
+            float distance = (sqrt(pow((diskPos.x - player2Pos.x),2) + pow((diskPos.z - player2Pos.z),2)));
+            if(distance == 0) return;
+            
+            diskDirection = glm::normalize(diskPos - player2Pos);
+            diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x),2) + pow((oldPlayer2Pos.z - player2Pos.z),2)))/ deltaT);
+        }
+        
+        diskPos += diskVelocity * diskDirection * deltaT;
+        diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
+        
+        // Disk
+        ubo.model = glm::translate(glm::mat4(1.0), diskPos);
+        vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
+            sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+        vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
 
-		// Disk
-		ubo.model = glm::mat4(1.0);
-		vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
-			sizeof(ubo), 0, &data);
-		memcpy(data, &ubo, sizeof(ubo));
-		vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
-
-	}
+    }
 };
 
 // This is the main: probably you do not need to touch this!
