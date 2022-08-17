@@ -81,6 +81,16 @@ protected:
 		}
 		return true;
 	}
+
+	bool diskCanStep(float x, float y) {
+		for (int i = 0; i < checkSteps; i++) {
+			if (!canStepPoint(x + cos(6.2832 * i / (float)checkSteps) * checkRadius,
+				y + sin(6.2832 * i / (float)checkSteps) * checkRadius)) {
+				return false;
+			}
+		}
+		return true;
+	}
     
     bool detectDiskCollision(float paddleX, float paddleZ, float diskX, float diskZ) {
         return (sqrt(pow((paddleX - diskX),2) + pow((paddleZ - diskZ),2)) < (radiusPaddle + radiusDisk));
@@ -432,10 +442,8 @@ protected:
 			break;
 		}
 
-		//std::cout << "player1 x: " << player1Pos.x+radiusPaddle << "\n";
 
 		if (!canStep(player1Pos.x, player1Pos.z, 1)) {
-			//std::cout << "can step: " << !canStep(player1Pos.x, player1Pos.z,1 ) << "\n";
 			player1Pos = oldPlayer1Pos;
 		}
 
@@ -535,10 +543,14 @@ protected:
             diskDirection = glm::normalize(diskPos - player2Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x),2) + pow((oldPlayer2Pos.z - player2Pos.z),2)))/ deltaT);
         }
-        
+		glm::vec3 diskOldPosition = diskPos;
         diskPos += diskVelocity * diskDirection * deltaT;
         diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
         
+		if (!diskCanStep(diskPos.x, diskPos.z)) {
+			diskPos = diskOldPosition;
+		}
+
         // Disk
         ubo.model = glm::translate(glm::mat4(1.0), diskPos);
         vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
