@@ -18,7 +18,7 @@ struct UniformBufferObject {
 class MyProject : public BaseProject {
 protected:
 	// Here you list all the Vulkan objects you need:
-
+    
 	// Descriptor Layouts [what will be passed to the shaders]
 	DescriptorSetLayout DSLglobal;
 	DescriptorSetLayout DSLobj;
@@ -55,7 +55,7 @@ protected:
 	Model M_disk;
 	Texture T_disk;
 	DescriptorSet DS_disk;
-    float radiusDisk = 0.03f;
+    float radiusDisk = 0.04f;
 
 	DescriptorSet DS_global;
 
@@ -68,10 +68,34 @@ protected:
 	//For the disk
 	int diskCollisionMapWidth, diskCollisionMapHeight;
 	stbi_uc* diskCollisionMap;
-
+    
 	const float checkRadius = radiusPaddle;
 	const float checkRadiusDisk = radiusDisk;
 	const int checkSteps = 200;
+    
+    enum Direction {
+        UP,
+        RIGHT,
+        DOWN,
+        LEFT
+    };
+    
+    glm::vec3 GetTableNormal(float diskX, float diskZ) {
+        
+        /*
+        //Corners
+        if(diskZ > 0.25f && diskX > 0.68f) return glm::normalize(glm::vec3(-1.0f, 0.0f, -1.0f));
+        else if(diskZ > 0.25f && diskX < -0.68f) return glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
+        else if(diskZ < -0.25f && diskX > 0.68f) return glm::normalize(glm::vec3(-1.0f, 0.0f, 1.0f));
+        else if(diskZ < -0.25f && diskX < -0.68f) return glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
+         */
+        
+        //Edges
+        if(diskZ > 0.32f) return glm::vec3(0.0f, 0.0f, -1.0f);
+        else if(diskZ < -0.32f) return glm::vec3(0.0f, 0.0f, 1.0f);
+        else if(diskX > 0.76f) return glm::vec3(-1.0f, 0.0f, 0.0f);
+        else return glm::vec3(1.0f, 0.0f, 0.0f);
+    }
 
 	bool canStepPoint(float x, float y) {
 		int pixX = round((x + 1.893 / 2) * (collisionMapWidth / 1.893));
@@ -120,7 +144,6 @@ protected:
 			return true;
 		return false;
 	}
-
 
 	// Here you set the main application parameters
 	void setWindowParameters() {
@@ -421,17 +444,17 @@ protected:
 		switch (viewMode) {
 		case 0:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				diskPos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_D)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+                diskPos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_S)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+                diskPos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_W)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+                diskPos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
 			}
 			break;
 		case 1:
@@ -474,15 +497,6 @@ protected:
 		if (!canStep(player1Pos.x, player1Pos.z, 1)) {
 			player1Pos = oldPlayer1Pos;
 		}
-
-		ubo.model = glm::translate(glm::mat4(1.0), player1Pos)	*
-			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f))*
-			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		vkMapMemory(device, DS_paddle1.uniformBuffersMemory[0][currentImage], 0,
-			sizeof(ubo), 0, &data);
-		memcpy(data, &ubo, sizeof(ubo));
-		vkUnmapMemory(device, DS_paddle1.uniformBuffersMemory[0][currentImage]);
 
 		// Paddle of player 2
 		glm::vec3 oldPlayer2Pos = player2Pos;
@@ -543,52 +557,36 @@ protected:
 		if (!canStep(player2Pos.x, player2Pos.z,2)) {
 			player2Pos = oldPlayer2Pos;
 		}
-
-		ubo.model = glm::translate(glm::mat4(1.0), player2Pos);
-		vkMapMemory(device, DS_paddle2.uniformBuffersMemory[0][currentImage], 0,
-			sizeof(ubo), 0, &data);
-		memcpy(data, &ubo, sizeof(ubo));
-		vkUnmapMemory(device, DS_paddle2.uniformBuffersMemory[0][currentImage]);
         
         //Collisions
-        
+                
         if(detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) {
             //std::cout << "Disk collision player1" << "\n";
-            
+                        
             float distance = (sqrt(pow((diskPos.x - player1Pos.x),2) + pow((diskPos.z - player1Pos.z),2)));
             if(distance == 0) return;
             
             diskDirection = glm::normalize(diskPos - player1Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer1Pos.x - player1Pos.x),2) + pow((oldPlayer1Pos.z - player1Pos.z),2)))/ deltaT);
+            
+            player1Pos = oldPlayer1Pos;
         };
         
         if(detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) {
             //std::cout << "Disk collision player2" << "\n";
-            
+                        
             float distance = (sqrt(pow((diskPos.x - player2Pos.x),2) + pow((diskPos.z - player2Pos.z),2)));
             if(distance == 0) return;
             
             diskDirection = glm::normalize(diskPos - player2Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x),2) + pow((oldPlayer2Pos.z - player2Pos.z),2)))/ deltaT);
+            
+            player2Pos = oldPlayer2Pos;
         }
-                
-		if (!diskCanStep(diskPos.x, diskPos.z)) {
-            glm::vec3 norm = glm::vec3(0.0, 0.0, 1.0f);
-            diskDirection = diskDirection - 2 * glm::dot(diskDirection, norm) * norm;
-		}
         
+        glm::vec3 oldDiskPos = diskPos;
         diskPos += diskVelocity * diskDirection * deltaT;
         diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
-
-        
-        // Disk
-        ubo.model = glm::translate(glm::mat4(1.0), diskPos);
-        vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
-            sizeof(ubo), 0, &data);
-        memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
-
-        //Score
         
         if(diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
         {
@@ -603,6 +601,7 @@ protected:
             ss << "textures/Score" << player1Score << ".png";
             //TODO: change texture
         }
+        
         else if(diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
         {
             diskVelocity = 0.0f;
@@ -616,6 +615,44 @@ protected:
             ss << "textures/Score" << player2Score << ".png";
             //TODO: change texture
         }
+    
+        else if(!diskCanStep(diskPos.x, diskPos.z)) {
+            diskPos = oldDiskPos;
+            diskDirection = glm::reflect(diskDirection, glm::normalize(GetTableNormal(diskPos.x, diskPos.z)));
+        }
+            
+        // Models
+        
+        ubo.model = glm::translate(glm::mat4(1.0), player1Pos)    *
+            glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 1.0f, 0.0f))*
+            glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *
+            glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        vkMapMemory(device, DS_paddle1.uniformBuffersMemory[0][currentImage], 0,
+            sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+        vkUnmapMemory(device, DS_paddle1.uniformBuffersMemory[0][currentImage]);
+
+        
+        ubo.model = glm::translate(glm::mat4(1.0), player2Pos);
+        vkMapMemory(device, DS_paddle2.uniformBuffersMemory[0][currentImage], 0,
+            sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+        vkUnmapMemory(device, DS_paddle2.uniformBuffersMemory[0][currentImage]);
+
+        
+        ubo.model = glm::translate(glm::mat4(1.0), diskPos);
+        vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
+            sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+        vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
+        
+        /*
+        std::cout << "posx"<< diskPos.x << "\n";
+        std::cout << "posy"<< diskPos.z << "\n";
+        std::cout << "dirx" << diskDirection.x << "\n";
+        std::cout << "dirz" << diskDirection.x << "\n";
+        std::cout << "vel" << diskVelocity << "\n";
+         */
     }
 };
 
