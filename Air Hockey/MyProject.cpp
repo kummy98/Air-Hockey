@@ -444,17 +444,17 @@ protected:
 		switch (viewMode) {
 		case 0:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
-				diskPos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+                player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_D)) {
-                diskPos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+                player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_S)) {
-                diskPos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+                player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_W)) {
-                diskPos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+                player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
 			}
 			break;
 		case 1:
