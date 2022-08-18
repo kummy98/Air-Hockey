@@ -48,6 +48,8 @@ protected:
 	DescriptorSet DS_paddle1;
 	DescriptorSet DS_paddle2;
 	float radiusPaddle = 0.07f;
+    glm::vec3 initialPlayer1Pos = glm::vec3(0.57f, 0, 0);
+    glm::vec3 initialPlayer2Pos = glm::vec3(-0.57f, 0, 0);
 
 	//Disk
 	Model M_disk;
@@ -330,11 +332,13 @@ protected:
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
 		static glm::mat3 CamDir = glm::mat3(1.0f);
-		static glm::vec3 player1Pos = glm::vec3(0.57f, 0, 0);
-		static glm::vec3 player2Pos = glm::vec3(-0.57f, 0, 0);
+        static glm::vec3 player1Pos = initialPlayer1Pos;
+        static glm::vec3 player2Pos = initialPlayer2Pos;
         static glm::vec3 diskPos = glm::vec3(0.0f);
         static glm::vec3 diskDirection;
         static float diskVelocity;
+        static int player1Score;
+        static int player2Score;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>
@@ -567,14 +571,16 @@ protected:
             diskDirection = glm::normalize(diskPos - player2Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x),2) + pow((oldPlayer2Pos.z - player2Pos.z),2)))/ deltaT);
         }
-		glm::vec3 diskOldPosition = diskPos;
+                
+		if (!diskCanStep(diskPos.x, diskPos.z)) {
+            glm::vec3 norm = glm::vec3(0.0, 0.0, 1.0f);
+            diskDirection = diskDirection - 2 * glm::dot(diskDirection, norm) * norm;
+		}
+        
         diskPos += diskVelocity * diskDirection * deltaT;
         diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
-        
-		if (!diskCanStep(diskPos.x, diskPos.z)) {
-			diskPos = diskOldPosition;
-		}
 
+        
         // Disk
         ubo.model = glm::translate(glm::mat4(1.0), diskPos);
         vkMapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage], 0,
@@ -582,6 +588,34 @@ protected:
         memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
 
+        //Score
+        
+        if(diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+        {
+            diskVelocity = 0.0f;
+            player1Pos = initialPlayer1Pos;
+            player2Pos = initialPlayer2Pos;
+            diskPos.x = 0.3f;
+            diskPos.z = 0.0f;
+            player1Score++;
+                        
+            std::stringstream ss;
+            ss << "textures/Score" << player1Score << ".png";
+            //TODO: change texture
+        }
+        else if(diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+        {
+            diskVelocity = 0.0f;
+            player1Pos = initialPlayer1Pos;
+            player2Pos = initialPlayer2Pos;
+            diskPos.x = -0.3f;
+            diskPos.z = 0.0f;
+            player2Score++;
+            
+            std::stringstream ss;
+            ss << "textures/Score" << player2Score << ".png";
+            //TODO: change texture
+        }
     }
 };
 
