@@ -82,19 +82,21 @@ protected:
     
     glm::vec3 GetTableNormal(float diskX, float diskZ) {
         
-        /*
+        glm::vec3 dir;
+        
         //Corners
-        if(diskZ > 0.25f && diskX > 0.68f) return glm::normalize(glm::vec3(-1.0f, 0.0f, -1.0f));
-        else if(diskZ > 0.25f && diskX < -0.68f) return glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
-        else if(diskZ < -0.25f && diskX > 0.68f) return glm::normalize(glm::vec3(-1.0f, 0.0f, 1.0f));
-        else if(diskZ < -0.25f && diskX < -0.68f) return glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
-         */
+        if(diskX >= 0.68f && diskZ >= 0.25f) dir = glm::vec3(-1.0f, 0.0f, -1.0f);
+        else if (diskX <= -0.68f && diskZ >= 0.25f) dir = glm::vec3(1.0f, 0.0f, -1.0f);
+        else if (diskX >= 0.68f && diskZ <= - 0.25f) dir = glm::vec3(-1.0f, 0.0f, 1.0f);
+        else if (diskX <= -0.68f && diskZ <= - 0.25f) dir = glm::vec3(1.0f, 0.0f, 1.0f);
         
         //Edges
-        if(diskZ > 0.32f) return glm::vec3(0.0f, 0.0f, -1.0f);
-        else if(diskZ < -0.32f) return glm::vec3(0.0f, 0.0f, 1.0f);
-        else if(diskX > 0.76f) return glm::vec3(-1.0f, 0.0f, 0.0f);
-        else return glm::vec3(1.0f, 0.0f, 0.0f);
+        else if(diskZ > 0.32f) dir = glm::vec3(0.0f, 0.0f, -1.0f);
+        else if(diskZ < -0.32f) dir = glm::vec3(0.0f, 0.0f, 1.0f);
+        else if(diskX > 0.76f) dir = glm::vec3(-1.0f, 0.0f, 0.0f);
+        else dir = glm::vec3(1.0f, 0.0f, 0.0f);
+        
+        return dir;
     }
 
 	bool canStepPoint(float x, float y) {
@@ -564,7 +566,11 @@ protected:
             //std::cout << "Disk collision player1" << "\n";
                         
             float distance = (sqrt(pow((diskPos.x - player1Pos.x),2) + pow((diskPos.z - player1Pos.z),2)));
-            if(distance == 0) return;
+            if(distance == 0)
+            {
+                player1Pos = oldPlayer1Pos;
+                return;
+            }
             
             diskDirection = glm::normalize(diskPos - player1Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer1Pos.x - player1Pos.x),2) + pow((oldPlayer1Pos.z - player1Pos.z),2)))/ deltaT);
@@ -576,7 +582,11 @@ protected:
             //std::cout << "Disk collision player2" << "\n";
                         
             float distance = (sqrt(pow((diskPos.x - player2Pos.x),2) + pow((diskPos.z - player2Pos.z),2)));
-            if(distance == 0) return;
+            if(distance == 0)
+            {
+                player2Pos = oldPlayer2Pos;
+                return;
+            }
             
             diskDirection = glm::normalize(diskPos - player2Pos);
             diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x),2) + pow((oldPlayer2Pos.z - player2Pos.z),2)))/ deltaT);
@@ -646,13 +656,11 @@ protected:
         memcpy(data, &ubo, sizeof(ubo));
         vkUnmapMemory(device, DS_disk.uniformBuffersMemory[0][currentImage]);
         
-        /*
-        std::cout << "posx"<< diskPos.x << "\n";
-        std::cout << "posy"<< diskPos.z << "\n";
-        std::cout << "dirx" << diskDirection.x << "\n";
-        std::cout << "dirz" << diskDirection.x << "\n";
-        std::cout << "vel" << diskVelocity << "\n";
-         */
+        //std::cout << "posx"<< diskPos.x << "\n";
+        //std::cout << "posy"<< diskPos.z << "\n";
+        //std::cout << "dirx" << diskDirection.x << "\n";
+        //std::cout << "dirz" << diskDirection.x << "\n";
+        //std::cout << "vel" << diskVelocity << "\n";
     }
 };
 
