@@ -721,7 +721,7 @@ protected:
 
 		//Scores
 		float scoreOutOfScreen = 999;
-		float translationScore2 = -0.106419f;
+		float translationScore = -0.106419f;
 
 		static int player1Score1 = 0;
 		static int player1Score2 = 0;
@@ -805,61 +805,61 @@ protected:
 			break;
 		}
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score1 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score1 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_0.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_0.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score2 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score2 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_1.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_1.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score3 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score3 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_2.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_2.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score4 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score4 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_3.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_3.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score5 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score5 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_4.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_4.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score6 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score6 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_5.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_5.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score7 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score7 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_6.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_6.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score8 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score8 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_7.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_7.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score9 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score9 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_8.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_8.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f);
+		ubo.model = glm::mat4(1.0f)*glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, 0.0f));
 		vkMapMemory(device, DS_score1_9.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
@@ -869,61 +869,61 @@ protected:
 
 
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score1 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score1 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_0.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_0.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score2 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score2 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_1.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_1.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score3 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score3 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_2.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_2.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score4 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score4 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_3.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_3.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score5 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score5 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_4.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_4.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score6 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score6 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_5.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_5.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score7 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score7 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_6.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_6.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score8 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score8 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_7.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_7.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score9 * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score9 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, 0.0f));
+		ubo.model = glm::mat4(1.0f);
 		vkMapMemory(device, DS_score2_9.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
