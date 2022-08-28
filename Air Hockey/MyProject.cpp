@@ -693,10 +693,10 @@ protected:
 
 		//Arcade
 		ubo.model = glm::mat4(1.0);
-		vkMapMemory(device, DS_floor.uniformBuffersMemory[0][currentImage], 0,
+		vkMapMemory(device, DS_arcade.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
-		vkUnmapMemory(device, DS_floor.uniformBuffersMemory[0][currentImage]);
+		vkUnmapMemory(device, DS_arcade.uniformBuffersMemory[0][currentImage]);
 
 
 		//Room
