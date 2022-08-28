@@ -82,6 +82,12 @@ protected:
 	Texture T_disk;
 	DescriptorSet DS_disk;
     float radiusDisk = 0.04f;
+    
+    //Arcade machine
+    Model M_arcade;
+    Texture T_arcade;
+    DescriptorSet DS_arcade;
+
 
 	DescriptorSet DS_global;
 
@@ -182,9 +188,9 @@ protected:
 		initialBackgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		// Descriptor pool sizes
-		uniformBlocksInPool = 25;
-		texturesInPool = 24;
-		setsInPool = 25;
+		uniformBlocksInPool = 26;
+		texturesInPool = 25;
+		setsInPool = 26;
 	}
 
 	// Here you load and setup all your Vulkan objects
@@ -332,6 +338,14 @@ protected:
 						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
 						{1, TEXTURE, 0, &T_disk}
 			});
+        
+        //Arcade
+        M_arcade.init(this, "models/ArcadeMachine.obj");
+        T_arcade.init(this, "textures/ArcadeTexture.png");
+        DS_arcade.init(this, &DSLobj, {
+                        {0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+                        {1, TEXTURE, 0, &T_arcade}
+            });
 
 		//Collision map
 		collisionMap = stbi_load("textures/mappa_collisioni.png", &collisionMapWidth, &collisionMapHeight, NULL, 1);
@@ -401,6 +415,10 @@ protected:
 		M_disk.cleanup();
 		T_disk.cleanup();
 		DS_disk.cleanup();
+        
+        M_arcade.cleanup();
+        T_arcade.cleanup();
+        DS_arcade.cleanup();
 
 		DSLglobal.cleanup();
 		DSLobj.cleanup();
@@ -506,6 +524,16 @@ protected:
 		vkCmdBindIndexBuffer(commandBuffer, M_disk.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_disk.descriptorSets[currentImage], 0, NULL);
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_disk.indices.size()), 1, 0, 0, 0);
+        
+        //Arcade
+        
+        VkBuffer vertexBuffers5[] = { M_arcade.vertexBuffer };
+        VkDeviceSize offsets5[] = { 0 };
+        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers5, offsets5);
+        vkCmdBindIndexBuffer(commandBuffer, M_arcade.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_arcade.descriptorSets[currentImage], 0, NULL);
+        vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_arcade.indices.size()), 1, 0, 0, 0);
+
 
 	}
 
@@ -584,6 +612,14 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_table.uniformBuffersMemory[0][currentImage]);
+        
+        //Arcade
+        ubo.model = glm::mat4(1.0);
+        vkMapMemory(device, DS_arcade.uniformBuffersMemory[0][currentImage], 0,
+            sizeof(ubo), 0, &data);
+        memcpy(data, &ubo, sizeof(ubo));
+        vkUnmapMemory(device, DS_arcade.uniformBuffersMemory[0][currentImage]);
+
 
 		//Scores
 		float scoreOutOfScreen = 999;
