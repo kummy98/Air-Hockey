@@ -33,13 +33,39 @@ protected:
 	DescriptorSet DS_table;
     
     //Scores
-    Model M_score1;
-    Texture T_score1;
-    DescriptorSet DS_score1;
+    Model M_score;
+
+    DescriptorSet DS_score1_0;
+	DescriptorSet DS_score1_1;
+	DescriptorSet DS_score1_2;
+	DescriptorSet DS_score1_3;
+	DescriptorSet DS_score1_4;
+	DescriptorSet DS_score1_5;
+	DescriptorSet DS_score1_6;
+	DescriptorSet DS_score1_7;
+	DescriptorSet DS_score1_8;
+	DescriptorSet DS_score1_9;
+	Texture T_score0;
+	Texture T_score1;
+	Texture T_score2;
+	Texture T_score3;
+	Texture T_score4;
+	Texture T_score5;
+	Texture T_score6;
+	Texture T_score7;
+	Texture T_score8;
+	Texture T_score9;
+	DescriptorSet DS_score2_0;
+	DescriptorSet DS_score2_1;
+	DescriptorSet DS_score2_2;
+	DescriptorSet DS_score2_3;
+	DescriptorSet DS_score2_4;
+	DescriptorSet DS_score2_5;
+	DescriptorSet DS_score2_6;
+	DescriptorSet DS_score2_7;
+	DescriptorSet DS_score2_8;
+	DescriptorSet DS_score2_9;
     
-    Model M_score2;
-    Texture T_score2;
-    DescriptorSet DS_score2;
 
 	//Paddle 1 and 2
 	Model M_paddle;
@@ -156,9 +182,9 @@ protected:
 		initialBackgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		// Descriptor pool sizes
-		uniformBlocksInPool = 7;
-		texturesInPool = 6;
-		setsInPool = 7;
+		uniformBlocksInPool = 25;
+		texturesInPool = 24;
+		setsInPool = 25;
 	}
 
 	// Here you load and setup all your Vulkan objects
@@ -184,19 +210,101 @@ protected:
 			});
         
         //Scores
-        M_score1.init(this, "models/Score1.obj");
-        T_score1.init(this, "textures/Score0.png");
-        DS_score1.init(this, &DSLobj, {
+        M_score.init(this, "models/Score1.obj");
+        T_score0.init(this, "textures/Score0.png");
+		T_score1.init(this, "textures/Score1.png");
+		T_score2.init(this, "textures/Score2.png");
+		T_score3.init(this, "textures/Score3.png");
+		T_score4.init(this, "textures/Score4.png");
+		T_score5.init(this, "textures/Score5.png");
+		T_score6.init(this, "textures/Score6.png");
+		T_score7.init(this, "textures/Score7.png");
+		T_score8.init(this, "textures/Score8.png");
+		T_score9.init(this, "textures/Score9.png");
+        DS_score1_0.init(this, &DSLobj, {
                         {0, UNIFORM, sizeof(UniformBufferObject), nullptr},
-                        {1, TEXTURE, 0, &T_score1}
+                        {1, TEXTURE, 0, &T_score0}
             });
+		DS_score1_1.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score1}
+			});
+		DS_score1_2.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score2}
+			});
+		DS_score1_3.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score3}
+			});
+		DS_score1_4.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score4}
+			});
+		DS_score1_5.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score5}
+			});
+		DS_score1_6.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score6}
+			});
+		DS_score1_7.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score7}
+			});
+		DS_score1_8.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score8}
+			});
+		DS_score1_9.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score9}
+			});
+
         
-        M_score2.init(this, "models/Score2.obj");
-        T_score2.init(this, "textures/Score0.png");
-        DS_score2.init(this, &DSLobj, {
+        
+        DS_score2_0.init(this, &DSLobj, {
                         {0, UNIFORM, sizeof(UniformBufferObject), nullptr},
-                        {1, TEXTURE, 0, &T_score2}
+                        {1, TEXTURE, 0, &T_score0}
             });
+
+		DS_score2_1.init(this, &DSLobj, {
+		{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+		{1, TEXTURE, 0, &T_score1}
+			});
+		DS_score2_2.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score2}
+			});
+		DS_score2_3.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score3}
+			});
+		DS_score2_4.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score4}
+			});
+		DS_score2_5.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score5}
+			});
+		DS_score2_6.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score6}
+			});
+		DS_score2_7.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score7}
+			});
+		DS_score2_8.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score8}
+			});
+		DS_score2_9.init(this, &DSLobj, {
+				{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+				{1, TEXTURE, 0, &T_score9}
+			});
 
 		//Paddle 1 and 2
 		M_paddle.init(this, "models/paddle.obj");
@@ -226,7 +334,7 @@ protected:
 			});
 
 		//Collision map
-		collisionMap = stbi_load("textures/collision_map.png", &collisionMapWidth, &collisionMapHeight, NULL, 1);
+		collisionMap = stbi_load("textures/mappa_collisioni.png", &collisionMapWidth, &collisionMapHeight, NULL, 1);
 		if (collisionMap) {
 
 			std::cout << "Table collision map width: " << collisionMapWidth << ", table height: " << collisionMapHeight<< "\n";
@@ -248,27 +356,56 @@ protected:
 
 	// Here you destroy all the objects you created!		
 	void localCleanup() {
-		DS_table.cleanup();
-		T_table.cleanup();
 		M_table.cleanup();
-        
-        DS_score1.cleanup();
-        T_score1.cleanup();
-        M_score1.cleanup();
+		T_table.cleanup();
+		DS_table.cleanup();
 
-		DS_paddle1.cleanup();
-		DS_paddle2.cleanup();
+		M_score.cleanup();
+		T_score0.cleanup();
+		T_score1.cleanup();
+		T_score2.cleanup();
+		T_score3.cleanup();
+		T_score4.cleanup();
+		T_score5.cleanup();
+		T_score6.cleanup();
+		T_score7.cleanup();
+		T_score8.cleanup();
+		T_score9.cleanup();
+        DS_score1_0.cleanup();
+		DS_score1_1.cleanup();
+		DS_score1_2.cleanup();
+		DS_score1_3.cleanup();
+		DS_score1_4.cleanup();
+		DS_score1_5.cleanup();
+		DS_score1_6.cleanup();
+		DS_score1_7.cleanup();
+		DS_score1_8.cleanup();
+		DS_score1_9.cleanup();
+		DS_score2_0.cleanup();
+		DS_score2_1.cleanup();
+		DS_score2_2.cleanup();
+		DS_score2_3.cleanup();
+		DS_score2_4.cleanup();
+		DS_score2_5.cleanup();
+		DS_score2_6.cleanup();
+		DS_score2_7.cleanup();
+		DS_score2_8.cleanup();
+		DS_score2_9.cleanup();
+
+		M_paddle.cleanup();
 		T_paddle1.cleanup();
 		T_paddle2.cleanup();
-		M_paddle.cleanup();
+		DS_paddle1.cleanup();
+		DS_paddle2.cleanup();
 
-		DS_disk.cleanup();
-		T_disk.cleanup();
 		M_disk.cleanup();
+		T_disk.cleanup();
+		DS_disk.cleanup();
 
-		P1.cleanup();
 		DSLglobal.cleanup();
 		DSLobj.cleanup();
+		P1.cleanup();
+
 	}
 
 	// Here it is the creation of the command buffer:
@@ -299,33 +436,54 @@ protected:
 			static_cast<uint32_t>(M_table.indices.size()), 1, 0, 0, 0);
         
         //Scores -----------------------------------------------------------------------------------
-        VkBuffer vertexBuffers1[] = { M_score1.vertexBuffer };
+        VkBuffer vertexBuffers1[] = { M_score.vertexBuffer };
         VkDeviceSize offsets1[] = { 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers1, offsets1);
-        vkCmdBindIndexBuffer(commandBuffer, M_score1.indexBuffer, 0,
-            VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(commandBuffer, M_score.indexBuffer, 0,VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(commandBuffer,
-            VK_PIPELINE_BIND_POINT_GRAPHICS,
-            P1.pipelineLayout, 1, 1, &DS_score1.descriptorSets[currentImage],
-            0, nullptr);
-
-        vkCmdDrawIndexed(commandBuffer,
-            static_cast<uint32_t>(M_score1.indices.size()), 1, 0, 0, 0);
+		//Scores of player 1
+        vkCmdBindDescriptorSets(commandBuffer,VK_PIPELINE_BIND_POINT_GRAPHICS,P1.pipelineLayout, 1, 1, &DS_score1_0.descriptorSets[currentImage],0, nullptr);
+		vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_1.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_2.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_3.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_4.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_5.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_6.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_7.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_8.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score1_9.descriptorSets[currentImage], 0, nullptr);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
         
-        VkBuffer vertexBuffers4[] = { M_score2.vertexBuffer };
-        VkDeviceSize offsets4[] = { 0 };
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers4, offsets4);
-        vkCmdBindIndexBuffer(commandBuffer, M_score2.indexBuffer, 0,
-            VK_INDEX_TYPE_UINT32);
-
-        vkCmdBindDescriptorSets(commandBuffer,
-            VK_PIPELINE_BIND_POINT_GRAPHICS,
-            P1.pipelineLayout, 1, 1, &DS_score2.descriptorSets[currentImage],
-            0, nullptr);
-
-        vkCmdDrawIndexed(commandBuffer,
-            static_cast<uint32_t>(M_score2.indices.size()), 1, 0, 0, 0);
+		//Scores of player 2
+        vkCmdBindDescriptorSets(commandBuffer,VK_PIPELINE_BIND_POINT_GRAPHICS,P1.pipelineLayout, 1, 1, &DS_score2_0.descriptorSets[currentImage],0, nullptr);
+        vkCmdDrawIndexed(commandBuffer,static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_1.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_2.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_3.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_4.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_5.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_6.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_7.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_8.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_score2_9.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_score.indices.size()), 1, 0, 0, 0);
 
 		//Paddle of player 1 and 2 -----------------------------------------------------------------------------------
 
@@ -333,10 +491,10 @@ protected:
 		VkDeviceSize offsets2[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers2, offsets2);
 		vkCmdBindIndexBuffer(commandBuffer, M_paddle.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
-		//player1
+		//Paddle player1
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_paddle1.descriptorSets[currentImage], 0, NULL);
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_paddle.indices.size()), 1, 0, 0, 0);
-		//player2
+		//Paddle player2
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_paddle2.descriptorSets[currentImage], 0, NULL);
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_paddle.indices.size()), 1, 0, 0, 0);
 
@@ -426,19 +584,216 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_table.uniformBuffersMemory[0][currentImage]);
+
+		//Scores
+		float scoreOutOfScreen = 999;
+		float translationScore2 = -0.106419f;
+
+		static int player1Score1 = 0;
+		static int player1Score2 = 0;
+		static int player1Score3 = 0;
+		static int player1Score4 = 0;
+		static int player1Score5 = 0;
+		static int player1Score6 = 0;
+		static int player1Score7 = 0;
+		static int player1Score8 = 0;
+		static int player1Score9 = 0;
+
+		
+		static int player2Score1 = 0;
+		static int player2Score2 = 0;
+		static int player2Score3 = 0;
+		static int player2Score4 = 0;
+		static int player2Score5 = 0;
+		static int player2Score6 = 0;
+		static int player2Score7 = 0;
+		static int player2Score8 = 0;
+		static int player2Score9 = 0;
+
+
+		switch (player1Score) {
+		case 1:
+			player1Score1 = 1;
+			break;
+		case 2:
+			player1Score2 = 1;
+			break;
+		case 3:
+			player1Score3 = 1;
+			break;
+		case 4:
+			player1Score4 = 1;
+			break;
+		case 5:
+			player1Score5 = 1;
+			break;
+		case 6:
+			player1Score6 = 1;
+			break;
+		case 7:
+			player1Score7 = 1;
+			break;
+		case 8:
+			player1Score8 = 1;
+			break;
+		case 9:
+			player1Score9 = 1;
+			break;
+		}
+
+		switch (player2Score) {
+		case 1:
+			player2Score1 = 1;
+			break;
+		case 2:
+			player2Score2 = 1;
+			break;
+		case 3:
+			player2Score3 = 1;
+			break;
+		case 4:
+			player2Score4 = 1;
+			break;
+		case 5:
+			player2Score5 = 1;
+			break;
+		case 6:
+			player2Score6 = 1;
+			break;
+		case 7:
+			player2Score7 = 1;
+			break;
+		case 8:
+			player2Score8 = 1;
+			break;
+		case 9:
+			player2Score9 = 1;
+			break;
+		}
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score1 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_0.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_0.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score2 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_1.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_1.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score3 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_2.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_2.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score4 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_3.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_3.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score5 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_4.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_4.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score6 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_5.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_5.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score7 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_6.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_6.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score8 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_7.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_7.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player1Score9 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score1_8.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_8.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) ;
+			vkMapMemory(device, DS_score1_9.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score1_9.uniformBuffersMemory[0][currentImage]);
+
+
+
+
         
-        //Scores
-        ubo.model = glm::mat4(1.0);
-        vkMapMemory(device, DS_score1.uniformBuffersMemory[0][currentImage], 0,
-            sizeof(ubo), 0, &data);
-        memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device, DS_score1.uniformBuffersMemory[0][currentImage]);
-        
-        ubo.model = glm::mat4(1.0);
-        vkMapMemory(device, DS_score2.uniformBuffersMemory[0][currentImage], 0,
-            sizeof(ubo), 0, &data);
-        memcpy(data, &ubo, sizeof(ubo));
-        vkUnmapMemory(device, DS_score2.uniformBuffersMemory[0][currentImage]);
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score1 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_0.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_0.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score2 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_1.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_1.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score3 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_2.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_2.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score4 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_3.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_3.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score5 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_4.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_4.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score6 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_5.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_5.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score7 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_6.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_6.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score8 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_7.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_7.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, player2Score9 * scoreOutOfScreen));
+			vkMapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage]);
+
+			ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore2, 0.0f, 0.0f));
+			vkMapMemory(device, DS_score2_9.uniformBuffersMemory[0][currentImage], 0,
+				sizeof(ubo), 0, &data);
+			memcpy(data, &ubo, sizeof(ubo));
+			vkUnmapMemory(device, DS_score2_9.uniformBuffersMemory[0][currentImage]);
 
 		// Paddle of player1
 		glm::vec3 oldPlayer1Pos = player1Pos;
@@ -609,7 +964,6 @@ protected:
                         
             std::stringstream ss;
             ss << "textures/Score" << player1Score << ".png";
-            //TODO: change texture
         }
         
         else if(diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
@@ -623,7 +977,6 @@ protected:
             
             std::stringstream ss;
             ss << "textures/Score" << player2Score << ".png";
-            //TODO: change texture
         }
     
         else if(!diskCanStep(diskPos.x, diskPos.z)) {
