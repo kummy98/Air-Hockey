@@ -1077,7 +1077,12 @@ protected:
 
         else if (!diskCanStep(diskPos.x, diskPos.z)) {
             diskPos = oldDiskPos;
-            diskDirection = glm::reflect(diskDirection, glm::normalize(GetTableNormal(diskPos.x, diskPos.z)));
+            glm::vec3 tableNormal = glm::normalize(GetTableNormal(diskPos.x, diskPos.z));
+            
+            if(glm::abs(glm::dot(diskDirection, tableNormal)) < 0.01) diskDirection = tableNormal;
+            else diskDirection = glm::reflect(diskDirection, tableNormal);
+            
+            diskPos += diskVelocity * diskDirection * deltaT;
         }
 
 		if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) {
