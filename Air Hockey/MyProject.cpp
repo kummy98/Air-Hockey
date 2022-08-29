@@ -730,12 +730,11 @@ protected:
 			if (player1Score == 10)
 			{
 				viewMode = 4;
-				resetGameScore = 1;
+				
 			}
 			else
 			{
 				viewMode = 3;
-				resetGameScore = 1;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_X))
@@ -743,6 +742,7 @@ protected:
 				player1Score = 0;
 				player2Score = 0;
 				viewMode = 0;
+				resetGameScore = 1;
 				player1Score1 = 0;
 				player1Score2 = 0;
 				player1Score3 = 0;
@@ -930,6 +930,8 @@ protected:
 			break;
 		}
 
+		std::cout << "resetGameScore" << resetGameScore<<"\n";
+
         //Player 1 scores
         
 		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score1 * scoreOutOfScreen));
@@ -1048,7 +1050,7 @@ protected:
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, resetGameScore * scoreOutOfScreen));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, resetGameScore * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_9.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
