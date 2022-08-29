@@ -671,7 +671,7 @@ protected:
 	void updateUniformBuffer(uint32_t currentImage) {
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
-		static glm::mat3 CamDir = glm::mat3(1.0f);
+		static glm::mat3 movDirection = glm::mat3(1.0f);
 		static glm::vec3 player1Pos = initialPlayer1Pos;
 		static glm::vec3 player2Pos = initialPlayer2Pos;
 		static glm::vec3 diskPos = glm::vec3(0.0f);
@@ -679,6 +679,25 @@ protected:
 		static float diskVelocity;
 		static int player1Score;
 		static int player2Score;
+		static int player1Score1 = 0;
+		static int player1Score2 = 0;
+		static int player1Score3 = 0;
+		static int player1Score4 = 0;
+		static int player1Score5 = 0;
+		static int player1Score6 = 0;
+		static int player1Score7 = 0;
+		static int player1Score8 = 0;
+		static int player1Score9 = 0;
+		static int player2Score1 = 0;
+		static int player2Score2 = 0;
+		static int player2Score3 = 0;
+		static int player2Score4 = 0;
+		static int player2Score5 = 0;
+		static int player2Score6 = 0;
+		static int player2Score7 = 0;
+		static int player2Score8 = 0;
+		static int player2Score9 = 0;
+		static int resetGameScore = 0;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>
@@ -706,15 +725,17 @@ protected:
 			}
 		}
 
-		/*if (player1Score == 10 || player2Score == 10)
+		if (player1Score == 10 || player2Score == 10)
 		{
 			if (player1Score == 10)
 			{
-				viewMode = 3;
+				viewMode = 4;
+				resetGameScore = 1;
 			}
 			else
 			{
-				viewMode = 4;
+				viewMode = 3;
+				resetGameScore = 1;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_X))
@@ -722,8 +743,28 @@ protected:
 				player1Score = 0;
 				player2Score = 0;
 				viewMode = 0;
+				player1Score1 = 0;
+				player1Score2 = 0;
+				player1Score3 = 0;
+				player1Score4 = 0;
+				player1Score5 = 0;
+				player1Score6 = 0;
+				player1Score7 = 0;
+				player1Score8 = 0;
+				player1Score9 = 0;
+
+
+				player2Score1 = 0;
+				player2Score2 = 0;
+				player2Score3 = 0;
+				player2Score4 = 0;
+				player2Score5 = 0;
+				player2Score6 = 0;
+				player2Score7 = 0;
+				player2Score8 = 0;
+				player2Score9 = 0;
 			}
-		}*/
+		}
 
 		switch (viewMode) {
 		case 0:
@@ -743,13 +784,13 @@ protected:
 			break;
 		case 3:
 			gubo.view = glm::lookAt(glm::vec3(0.0f, 19.0f, 0.0f),
-				glm::vec3(0.0f, -1.0f, 0.0f),
-				glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::vec3(0.0f, 0.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 1.0f));
 			break;
 		case 4:
 			gubo.view = glm::lookAt(glm::vec3(0.0f, 29.0f, 0.0f),
-				glm::vec3(0.0f, -1.0f, 0.0f),
-				glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::vec3(0.0f, 0.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 1.0f));
 			break;
 		}
 		
@@ -820,30 +861,12 @@ protected:
 		float scoreOutOfScreen = 999;
 		float translationScore = -0.106419f;
 
-		static int player1Score1 = 0;
-		static int player1Score2 = 0;
-		static int player1Score3 = 0;
-		static int player1Score4 = 0;
-		static int player1Score5 = 0;
-		static int player1Score6 = 0;
-		static int player1Score7 = 0;
-		static int player1Score8 = 0;
-		static int player1Score9 = 0;
 
-
-		static int player2Score1 = 0;
-		static int player2Score2 = 0;
-		static int player2Score3 = 0;
-		static int player2Score4 = 0;
-		static int player2Score5 = 0;
-		static int player2Score6 = 0;
-		static int player2Score7 = 0;
-		static int player2Score8 = 0;
-		static int player2Score9 = 0;
 
 
 		switch (player1Score) {
 		case 1:
+			resetGameScore = 0;
 			player1Score1 = 1;
 			break;
 		case 2:
@@ -874,6 +897,7 @@ protected:
 
 		switch (player2Score) {
 		case 1:
+			resetGameScore = 0;
 			player2Score1 = 1;
 			break;
 		case 2:
@@ -956,7 +980,7 @@ protected:
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_8.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f)*glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, 0.0f));
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, resetGameScore * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_9.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
@@ -1020,7 +1044,7 @@ protected:
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score2_8.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::mat4(1.0f);
+		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, resetGameScore * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_9.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
@@ -1032,50 +1056,50 @@ protected:
 		switch (viewMode) {
 		case 0:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_D)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_S)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_W)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 			break;
 		case 1:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_D)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_S)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_W)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			break;
 		case 2:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 
 			}
 			if (glfwGetKey(window, GLFW_KEY_D)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_S)) {
-				player1Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 
 			}
 			if (glfwGetKey(window, GLFW_KEY_W)) {
-				player1Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player1Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 
 			}
 			break;
@@ -1092,51 +1116,51 @@ protected:
 		switch (viewMode) {
 		case 0:
 			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 
 			}
 			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_UP)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 
 			}
 			break;
 		case 1:
 			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_UP)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			break;
 		case 2:
 			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[2]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[2]) * deltaT;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_UP)) {
-				player2Pos += MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos += MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-				player2Pos -= MOVE_SPEED * glm::vec3(CamDir[0]) * deltaT;
+				player2Pos -= MOVE_SPEED * glm::vec3(movDirection[0]) * deltaT;
 			}
 			break;
 
