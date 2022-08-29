@@ -101,6 +101,15 @@ protected:
 	Texture T_columns;
 	DescriptorSet DS_columns;
 
+	//Victory screens
+	Model M_blueWin;
+	Model M_redWin;
+	Texture T_blueWin;
+	Texture T_redWin;
+	DescriptorSet DS_blueWin;
+	DescriptorSet DS_redWin;
+	glm::vec3 posBlueScreen = glm::vec3(0, 10.0f, 0);
+	glm::vec3 posRedScreen = glm::vec3(0, 20.0f, 0);
 
 	DescriptorSet DS_global;
 
@@ -201,9 +210,9 @@ protected:
 		initialBackgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		// Descriptor pool sizes
-		uniformBlocksInPool = 29;
-		texturesInPool = 28;
-		setsInPool = 29;
+		uniformBlocksInPool = 31;
+		texturesInPool = 30;
+		setsInPool = 31;
 	}
 
 	// Here you load and setup all your Vulkan objects
@@ -380,6 +389,21 @@ protected:
 						{1, TEXTURE, 0, &T_columns}
 			});
 
+		//Victory screens
+		M_blueWin.init(this, "models/Floor.obj");
+		T_blueWin.init(this, "textures/bluewins.jpg");
+		DS_blueWin.init(this, &DSLobj, {
+						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+						{1, TEXTURE, 0, &T_blueWin}
+			});
+
+		M_redWin.init(this, "models/Floor.obj");
+		T_redWin.init(this, "textures/redwins.jpg");
+		DS_redWin.init(this, &DSLobj, {
+						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+						{1, TEXTURE, 0, &T_redWin}
+			});
+
 		//Collision map
 		collisionMap = stbi_load("textures/collision_map.png", &collisionMapWidth, &collisionMapHeight, NULL, 1);
 		if (collisionMap) {
@@ -468,6 +492,15 @@ protected:
 		DS_walls.cleanup();
 		DS_floor.cleanup();
 		DS_columns.cleanup();
+
+		//victory screens
+		M_blueWin.cleanup();
+		M_redWin.cleanup();
+		T_blueWin.cleanup();
+		T_redWin.cleanup();
+		DS_blueWin.cleanup();
+		DS_redWin.cleanup();
+
 
 		DSLglobal.cleanup();
 		DSLobj.cleanup();
@@ -613,6 +646,24 @@ protected:
 		vkCmdBindIndexBuffer(commandBuffer, M_columns.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_columns.descriptorSets[currentImage], 0, NULL);
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_columns.indices.size()), 1, 0, 0, 0);
+
+
+		//Victory screens
+
+		VkBuffer vertexBuffers9[] = { M_blueWin.vertexBuffer };
+		VkDeviceSize offsets9[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers9, offsets9);
+		vkCmdBindIndexBuffer(commandBuffer, M_blueWin.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_blueWin.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_blueWin.indices.size()), 1, 0, 0, 0);
+
+		VkBuffer vertexBuffers10[] = { M_redWin.vertexBuffer };
+		VkDeviceSize offsets10[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers10, offsets10);
+		vkCmdBindIndexBuffer(commandBuffer, M_redWin.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_redWin.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_redWin.indices.size()), 1, 0, 0, 0);
+
 	}
 
 	// Here is where you update the uniforms.
@@ -646,13 +697,33 @@ protected:
 		static int viewMode = 0;
 		static float debounce = time;
 
-		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+		if (glfwGetKey(window, GLFW_KEY_SPACE))
+		{
 			if (time - debounce > 0.33) {
 				viewMode = (viewMode + 1) % 3;
 				debounce = time;
 				std::cout << "viewMode: " << viewMode << "\n";
 			}
 		}
+
+		/*if (player1Score == 10 || player2Score == 10)
+		{
+			if (player1Score == 10)
+			{
+				viewMode = 3;
+			}
+			else
+			{
+				viewMode = 4;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_X))
+			{
+				player1Score = 0;
+				player2Score = 0;
+				viewMode = 0;
+			}
+		}*/
 
 		switch (viewMode) {
 		case 0:
@@ -670,7 +741,19 @@ protected:
 				glm::vec3(0.0f, 0.0f, 0.0f),
 				glm::vec3(0.0f, 1.0f, 0.0f));
 			break;
+		case 3:
+			gubo.view = glm::lookAt(glm::vec3(0.0f, 19.0f, 0.0f),
+				glm::vec3(0.0f, -1.0f, 0.0f),
+				glm::vec3(0.0f, 1.0f, 0.0f));
+			break;
+		case 4:
+			gubo.view = glm::lookAt(glm::vec3(0.0f, 29.0f, 0.0f),
+				glm::vec3(0.0f, -1.0f, 0.0f),
+				glm::vec3(0.0f, 1.0f, 0.0f));
+			break;
 		}
+		
+
 
 
 		gubo.proj = glm::perspective(glm::radians(45.0f),
@@ -690,6 +773,7 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_table.uniformBuffersMemory[0][currentImage]);
+
 
 		//Arcade
 		ubo.model = glm::mat4(1.0);
@@ -718,6 +802,19 @@ protected:
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_columns.uniformBuffersMemory[0][currentImage]);
 
+
+		//Victory screens
+		ubo.model = glm::translate(glm::mat4(1.0), posBlueScreen);
+		vkMapMemory(device, DS_blueWin.uniformBuffersMemory[0][currentImage], 0,
+			sizeof(ubo), 0, &data);
+		memcpy(data, &ubo, sizeof(ubo));
+		vkUnmapMemory(device, DS_blueWin.uniformBuffersMemory[0][currentImage]);
+
+		ubo.model = glm::translate(glm::mat4(1.0), posRedScreen);
+		vkMapMemory(device, DS_redWin.uniformBuffersMemory[0][currentImage], 0,
+			sizeof(ubo), 0, &data);
+		memcpy(data, &ubo, sizeof(ubo));
+		vkUnmapMemory(device, DS_redWin.uniformBuffersMemory[0][currentImage]);
 
 		//Scores
 		float scoreOutOfScreen = 999;
@@ -1050,40 +1147,40 @@ protected:
 		}
 
 		//Collisions
-        
-        glm::vec3 oldDiskPos = diskPos;
-        diskPos += diskVelocity * diskDirection * deltaT;
-        diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
 
-        if (diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
-        {
-            diskVelocity = 0.0f;
-            player1Pos = initialPlayer1Pos;
-            player2Pos = initialPlayer2Pos;
-            diskPos.x = 0.3f;
-            diskPos.z = 0.0f;
-            player1Score++;
-        }
+		glm::vec3 oldDiskPos = diskPos;
+		diskPos += diskVelocity * diskDirection * deltaT;
+		diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
 
-        else if (diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
-        {
-            diskVelocity = 0.0f;
-            player1Pos = initialPlayer1Pos;
-            player2Pos = initialPlayer2Pos;
-            diskPos.x = -0.3f;
-            diskPos.z = 0.0f;
-            player2Score++;
-        }
+		if (diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+		{
+			diskVelocity = 0.0f;
+			player1Pos = initialPlayer1Pos;
+			player2Pos = initialPlayer2Pos;
+			diskPos.x = 0.3f;
+			diskPos.z = 0.0f;
+			player1Score++;
+		}
 
-        else if (!diskCanStep(diskPos.x, diskPos.z)) {
-            diskPos = oldDiskPos;
-            glm::vec3 tableNormal = glm::normalize(GetTableNormal(diskPos.x, diskPos.z));
-            
-            if(glm::abs(glm::dot(diskDirection, tableNormal)) < 0.01) diskDirection = tableNormal;
-            else diskDirection = glm::reflect(diskDirection, tableNormal);
-            
-            diskPos += diskVelocity * diskDirection * deltaT;
-        }
+		else if (diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+		{
+			diskVelocity = 0.0f;
+			player1Pos = initialPlayer1Pos;
+			player2Pos = initialPlayer2Pos;
+			diskPos.x = -0.3f;
+			diskPos.z = 0.0f;
+			player2Score++;
+		}
+
+		else if (!diskCanStep(diskPos.x, diskPos.z)) {
+			diskPos = oldDiskPos;
+			glm::vec3 tableNormal = glm::normalize(GetTableNormal(diskPos.x, diskPos.z));
+
+			if (glm::abs(glm::dot(diskDirection, tableNormal)) < 0.01) diskDirection = tableNormal;
+			else diskDirection = glm::reflect(diskDirection, tableNormal);
+
+			diskPos += diskVelocity * diskDirection * deltaT;
+		}
 
 		if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) {
 			//std::cout << "Disk collision player1" << "\n";
@@ -1099,9 +1196,9 @@ protected:
 			diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer1Pos.x - player1Pos.x), 2) + pow((oldPlayer1Pos.z - player1Pos.z), 2))) / deltaT);
 
 			player1Pos = oldPlayer1Pos;
-            diskPos = oldDiskPos;
-            
-            if(detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) player2Pos = oldPlayer2Pos;
+			diskPos = oldDiskPos;
+
+			if (detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) player2Pos = oldPlayer2Pos;
 		};
 
 		if (detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) {
@@ -1118,9 +1215,9 @@ protected:
 			diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x), 2) + pow((oldPlayer2Pos.z - player2Pos.z), 2))) / deltaT);
 
 			player2Pos = oldPlayer2Pos;
-            diskPos = oldDiskPos;
-            
-            if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) player1Pos = oldPlayer1Pos;
+			diskPos = oldDiskPos;
+
+			if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) player1Pos = oldPlayer1Pos;
 		}
 
 		// Models
