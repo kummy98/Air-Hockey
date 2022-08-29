@@ -81,7 +81,7 @@ protected:
 	Model M_disk;
 	Texture T_disk;
 	DescriptorSet DS_disk;
-	float radiusDisk = 0.04f;
+	float radiusDisk = 0.03f;
 
 	//Arcade machine
 	Model M_arcade;
@@ -1050,6 +1050,35 @@ protected:
 		}
 
 		//Collisions
+        
+        glm::vec3 oldDiskPos = diskPos;
+        diskPos += diskVelocity * diskDirection * deltaT;
+        diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
+
+        if (diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+        {
+            diskVelocity = 0.0f;
+            player1Pos = initialPlayer1Pos;
+            player2Pos = initialPlayer2Pos;
+            diskPos.x = 0.3f;
+            diskPos.z = 0.0f;
+            player1Score++;
+        }
+
+        else if (diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
+        {
+            diskVelocity = 0.0f;
+            player1Pos = initialPlayer1Pos;
+            player2Pos = initialPlayer2Pos;
+            diskPos.x = -0.3f;
+            diskPos.z = 0.0f;
+            player2Score++;
+        }
+
+        else if (!diskCanStep(diskPos.x, diskPos.z)) {
+            diskPos = oldDiskPos;
+            diskDirection = glm::reflect(diskDirection, glm::normalize(GetTableNormal(diskPos.x, diskPos.z)));
+        }
 
 		if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) {
 			//std::cout << "Disk collision player1" << "\n";
@@ -1065,6 +1094,9 @@ protected:
 			diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer1Pos.x - player1Pos.x), 2) + pow((oldPlayer1Pos.z - player1Pos.z), 2))) / deltaT);
 
 			player1Pos = oldPlayer1Pos;
+            diskPos = oldDiskPos;
+            
+            if(detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) player2Pos = oldPlayer2Pos;
 		};
 
 		if (detectDiskCollision(player2Pos.x, player2Pos.z, diskPos.x, diskPos.z)) {
@@ -1081,41 +1113,9 @@ protected:
 			diskVelocity = fmaxf(diskVelocity, DISK_SPEED_INCREASE * (sqrt(pow((oldPlayer2Pos.x - player2Pos.x), 2) + pow((oldPlayer2Pos.z - player2Pos.z), 2))) / deltaT);
 
 			player2Pos = oldPlayer2Pos;
-		}
-
-		glm::vec3 oldDiskPos = diskPos;
-		diskPos += diskVelocity * diskDirection * deltaT;
-		diskVelocity = fmaxf(0.0, diskVelocity - DISK_DECELERATION * deltaT);
-
-		if (diskPos.x > 0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
-		{
-			diskVelocity = 0.0f;
-			player1Pos = initialPlayer1Pos;
-			player2Pos = initialPlayer2Pos;
-			diskPos.x = 0.3f;
-			diskPos.z = 0.0f;
-			player1Score++;
-
-			std::stringstream ss;
-			ss << "textures/Score" << player1Score << ".png";
-		}
-
-		else if (diskPos.x < -0.8 && diskPos.z < 0.12 && diskPos.z > -0.12)
-		{
-			diskVelocity = 0.0f;
-			player1Pos = initialPlayer1Pos;
-			player2Pos = initialPlayer2Pos;
-			diskPos.x = -0.3f;
-			diskPos.z = 0.0f;
-			player2Score++;
-
-			std::stringstream ss;
-			ss << "textures/Score" << player2Score << ".png";
-		}
-
-		else if (!diskCanStep(diskPos.x, diskPos.z)) {
-			diskPos = oldDiskPos;
-			diskDirection = glm::reflect(diskDirection, glm::normalize(GetTableNormal(diskPos.x, diskPos.z)));
+            diskPos = oldDiskPos;
+            
+            if (detectDiskCollision(player1Pos.x, player1Pos.z, diskPos.x, diskPos.z)) player1Pos = oldPlayer1Pos;
 		}
 
 		// Models
