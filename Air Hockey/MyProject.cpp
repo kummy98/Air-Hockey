@@ -390,14 +390,14 @@ protected:
 			});
 
 		//Victory screens
-		M_blueWin.init(this, "models/Floor.obj");
+		M_blueWin.init(this, "models/Victory.obj");
 		T_blueWin.init(this, "textures/bluewins.jpg");
 		DS_blueWin.init(this, &DSLobj, {
 						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
 						{1, TEXTURE, 0, &T_blueWin}
 			});
 
-		M_redWin.init(this, "models/Floor.obj");
+		M_redWin.init(this, "models/Victory.obj");
 		T_redWin.init(this, "textures/redwins.jpg");
 		DS_redWin.init(this, &DSLobj, {
 						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
@@ -845,13 +845,20 @@ protected:
 
 
 		//Victory screens
-		ubo.model = glm::translate(glm::mat4(1.0), posBlueScreen);
+		ubo.model = glm::translate(glm::mat4(1.0), posBlueScreen) *
+                        glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+                        glm::scale(glm::mat4(1.0f), glm::vec3(1.35f, 1.35f, 1.35f));
+        ;
+        
 		vkMapMemory(device, DS_blueWin.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_blueWin.uniformBuffersMemory[0][currentImage]);
 
-		ubo.model = glm::translate(glm::mat4(1.0), posRedScreen);
+		ubo.model = glm::translate(glm::mat4(1.0), posRedScreen) *
+                        glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+                        glm::scale(glm::mat4(1.0f), glm::vec3(1.35f, 1.35f, 1.35f));
+
 		vkMapMemory(device, DS_redWin.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
@@ -860,9 +867,6 @@ protected:
 		//Scores
 		float scoreOutOfScreen = 999;
 		float translationScore = -0.106419f;
-
-
-
 
 		switch (player1Score) {
 		case 1:
@@ -926,6 +930,8 @@ protected:
 			break;
 		}
 
+        //Player 1 scores
+        
 		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(translationScore, 0.0f, player1Score1 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score1_0.uniformBuffersMemory[0][currentImage], 0,
 			sizeof(ubo), 0, &data);
@@ -985,10 +991,8 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_score1_9.uniformBuffersMemory[0][currentImage]);
-
-
-
-
+        
+        //Player 2 scores
 
 		ubo.model = glm::mat4(1.0f) *glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, player2Score1 * scoreOutOfScreen));
 		vkMapMemory(device, DS_score2_0.uniformBuffersMemory[0][currentImage], 0,
@@ -1052,7 +1056,7 @@ protected:
 
 		// Paddle of player1
 		glm::vec3 oldPlayer1Pos = player1Pos;
-
+        
 		switch (viewMode) {
 		case 0:
 			if (glfwGetKey(window, GLFW_KEY_A)) {
