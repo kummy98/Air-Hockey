@@ -111,6 +111,12 @@ protected:
 	glm::vec3 posBlueScreen = glm::vec3(0, 10.0f, 0);
 	glm::vec3 posRedScreen = glm::vec3(0, 20.0f, 0);
 
+	//Menu screen
+	Model M_menu;
+	Texture T_menu;
+	DescriptorSet DS_menu;
+	glm::vec3 posMenuScreen = glm::vec3(0, 30.0f, 0);
+
 	DescriptorSet DS_global;
 
 	//Collision maps
@@ -210,9 +216,9 @@ protected:
 		initialBackgroundColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		// Descriptor pool sizes
-		uniformBlocksInPool = 31;
-		texturesInPool = 30;
-		setsInPool = 31;
+		uniformBlocksInPool = 32;
+		texturesInPool = 31;
+		setsInPool = 32;
 	}
 
 	// Here you load and setup all your Vulkan objects
@@ -404,6 +410,14 @@ protected:
 						{1, TEXTURE, 0, &T_redWin}
 			});
 
+		//Menu screen
+		M_menu.init(this, "models/Victory.obj");
+		T_menu.init(this, "textures/menu.jpg");
+		DS_menu.init(this, &DSLobj, {
+						{0, UNIFORM, sizeof(UniformBufferObject), nullptr},
+						{1, TEXTURE, 0, &T_menu}
+			});
+
 		//Collision map
 		collisionMap = stbi_load("textures/collision_map.png", &collisionMapWidth, &collisionMapHeight, NULL, 1);
 		if (collisionMap) {
@@ -500,6 +514,11 @@ protected:
 		T_redWin.cleanup();
 		DS_blueWin.cleanup();
 		DS_redWin.cleanup();
+
+		//menu screen
+		M_menu.cleanup();
+		T_menu.cleanup();
+		DS_menu.cleanup();
 
 
 		DSLglobal.cleanup();
@@ -664,6 +683,14 @@ protected:
 		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_redWin.descriptorSets[currentImage], 0, NULL);
 		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_redWin.indices.size()), 1, 0, 0, 0);
 
+		//Menu screen
+		VkBuffer vertexBuffers11[] = { M_menu.vertexBuffer };
+		VkDeviceSize offsets11[] = { 0 };
+		vkCmdBindVertexBuffers(commandBuffer, 0, 1, vertexBuffers11, offsets11);
+		vkCmdBindIndexBuffer(commandBuffer, M_menu.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+		vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, P1.pipelineLayout, 1, 1, &DS_menu.descriptorSets[currentImage], 0, NULL);
+		vkCmdDrawIndexed(commandBuffer, static_cast<uint32_t>(M_menu.indices.size()), 1, 0, 0, 0);
+
 	}
 
 	// Here is where you update the uniforms.
@@ -713,13 +740,13 @@ protected:
 		UniformBufferObject ubo{};
 
 		void* data;
-		static int viewMode = 0;
+		static int viewMode = 5; //Inizia dal menu
 		static float debounce = time;
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE))
 		{
 			if (time - debounce > 0.33) {
-				viewMode = (viewMode + 1) % 3;
+				viewMode = (viewMode + 1) % 3; //View mode del menu è 5, premendo spazio diventa (5+1)%3 = 0
 				debounce = time;
 				std::cout << "viewMode: " << viewMode << "\n";
 			}
@@ -793,7 +820,12 @@ protected:
 				glm::vec3(0.0f, 0.0f, 0.0f),
 				glm::vec3(0.0f, 0.0f, 1.0f));
 			break;
+		case 5:
+			gubo.view = glm::lookAt(glm::vec3(0.0f, 39.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 0.0f),
+				glm::vec3(0.0f, 0.0f, 1.0f));
 		}
+		
 
 
 
@@ -864,6 +896,16 @@ protected:
 			sizeof(ubo), 0, &data);
 		memcpy(data, &ubo, sizeof(ubo));
 		vkUnmapMemory(device, DS_redWin.uniformBuffersMemory[0][currentImage]);
+
+		//menu screen
+		ubo.model = glm::translate(glm::mat4(1.0), posMenuScreen) *
+			glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f)) *
+			glm::scale(glm::mat4(1.0f), glm::vec3(1.35f, 1.35f, 1.35f));
+
+		vkMapMemory(device, DS_menu.uniformBuffersMemory[0][currentImage], 0,
+			sizeof(ubo), 0, &data);
+		memcpy(data, &ubo, sizeof(ubo));
+		vkUnmapMemory(device, DS_menu.uniformBuffersMemory[0][currentImage]);
 
 		//Scores
 		float scoreOutOfScreen = 999;
